@@ -1,0 +1,28 @@
+<resources>
+    <!--下拉刷新ListView的尺寸-->
+
+    <string name="footer_hint_load_normal">加载更多</string>
+    <string name="footer_hint_load_ready">放开以加载更多</string>
+    <string name="header_hint_refresh_normal">下拉刷新...</string>
+    <string name="header_hint_refresh_ready">放开以刷新...</string>
+    <string name="header_hint_refresh_loading">正在载入&#8230;</string>
+    <string name="header_hint_refresh_time">上次更新时间:</string>
+    <!-- -->
+    <string name="app_name">NewSxi</string>
+    <string name="btn_lianjie">连 接</string>
+    <string name="btn_shezhi">设置</string>
+    <string name="btn_shebei">设备信息</string>
+    <string name="btn_idchaxun">ID 查询</string>
+    <string name="btn_shengji">升级</string>
+    <string name="btn_shiyongjiaocheng">使用教程</string>
+    <string name="btn_shuomingshu">说明书</string>
+    <string name="btn_kefu">在线客服</string>
+    <string name="btn_huodong">活动</string>
+    <string name="btn_fankui">反馈</string>
+    <string name="btn_shouhou">售后</string>
+    <string name="btn_xiaoshoumendian">销售门店</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="searching">搜索中...</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+</resources>

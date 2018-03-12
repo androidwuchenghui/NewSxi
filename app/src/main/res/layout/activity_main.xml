@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        ></android.support.v4.view.ViewPager>
+
+    <com.chaychan.library.BottomBarLayout
+        android:id="@+id/bbl"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@color/tab_gb"
+        >
+
+        <com.chaychan.library.BottomBarItem
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:iconNormal="@mipmap/tab_home_n"
+            app:iconSelected="@mipmap/tab_home"
+            app:itemText="首页"
+            app:textColorNormal="@color/tab_normal_color"
+            app:textColorSelected="@color/tab_selected_color"
+            app:itemTextSize="8sp"
+            app:itemMarginTop="-5dp"
+            />
+
+        <com.chaychan.library.BottomBarItem
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:iconNormal="@mipmap/tab_luntan_n"
+            app:iconSelected="@mipmap/tab_luntan"
+            app:itemText="论坛"
+            app:textColorNormal="@color/tab_normal_color"
+            app:textColorSelected="@color/tab_selected_color"
+            app:itemTextSize="8sp"
+            app:itemMarginTop="-5dp"
+            />
+
+
+        <com.chaychan.library.BottomBarItem
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:iconNormal="@mipmap/tab_user_n"
+            app:iconSelected="@mipmap/tab_user"
+            app:itemText="会员"
+            app:textColorNormal="@color/tab_normal_color"
+            app:textColorSelected="@color/tab_selected_color"
+            app:itemTextSize="8sp"
+            app:itemMarginTop="-5dp"
+            />
+
+    </com.chaychan.library.BottomBarLayout>
+
+</LinearLayout>
+<!--
+    <com.hjm.bottomtabbar.BottomTabBar
+        android:id="@+id/bottom_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        hjm:tab_divider_background="#FF0000"
+        hjm:tab_divider_height="5dp"
+        hjm:tab_font_size="6sp"
+        hjm:tab_img_font_padding="0dp"
+        hjm:tab_img_height="30dp"
+        hjm:tab_img_width="30dp"
+        hjm:tab_isshow_divider="true"
+        hjm:tab_padding_bottom="5dp"
+        hjm:tab_padding_top="8dp"
+        hjm:tab_selected_color="#000000"
+        hjm:tab_unselected_color="@color/colorPrimary">
+
+    </com.hjm.bottomtabbar.BottomTabBar>
+
+    -->
+
+
