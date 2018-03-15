@@ -3,11 +3,14 @@ package wu.chengsiyi.com.newsxi;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -40,6 +43,10 @@ import wu.chengsiyi.com.service.BluetoothLeService;
 import wu.chengsiyi.com.widget.refresh_listview.XupListView;
 
 import static wu.chengsiyi.com.base.BaseApplication.getBluetoothClient;
+import static wu.chengsiyi.com.constant.Constants.ACTION_STATUS_CONNECTED;
+import static wu.chengsiyi.com.constant.Constants.ACTION_STATUS_CONNECTED_OK;
+import static wu.chengsiyi.com.constant.Constants.ACTION_STATUS_DISCONNECT;
+import static wu.chengsiyi.com.constant.Constants.ACTION_STATUS_DISCONNECT_TIP;
 
 /**
  * Created by ${Wu} on 2018/3/5.
@@ -55,9 +62,11 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
     private BluetoothClient mClient;
     //dialog
     private ProgressDialog dialog;
+
     //ble服务
     private BluetoothLeService mBluetoothLeService;
 
+    private Handler mHandler;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +80,7 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
         EventBus.getDefault().register(this);
 
         init();
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
     }
 
 
@@ -94,10 +102,11 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
     };
 
     private void init() {
+        mHandler = new Handler();
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);//设置进度条的样式
         dialog.setMessage(ConnectActivity.this.getString(R.string.searching));
-
+        dialog.setCanceledOnTouchOutside(false);
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         xlv.setAdapter(mLeDeviceListAdapter);
 
@@ -202,6 +211,8 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
                 @Override
                 public void onClick(View v) {
 
+                    dialog.setMessage(ConnectActivity.this.getString(R.string.connecting));
+                    dialog.show();
                     mBluetoothLeService.setDevice(device);
                 }
             });
@@ -263,7 +274,6 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
         }
 
 
-
     }
 
     @Override
@@ -280,11 +290,76 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
         super.onDestroy();
         mClient.stopSearch();
         EventBus.getDefault().unregister(this);
+        unbindService(mServiceConnection);
     }
-
+    // 接收EventBus
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onMoonEvent(MessageEvent messageEvent){
         Log.d(TAG, "onMoonEvent: "+messageEvent.getMessage()+"    ms:  "+messageEvent);
-//        ConnectActivity.this.finish();
+        switch (messageEvent.getMessage()){
+            case ACTION_STATUS_CONNECTED:
+
+                if(!dialog.isShowing()){
+                    dialog.setMessage(ConnectActivity.this.getString(R.string.connecting));
+                    dialog.show();
+                }
+            break;
+            case ACTION_STATUS_DISCONNECT_TIP:
+
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+                }
+
+                new AlertDialog.Builder(ConnectActivity.this)
+                        .setIcon(R.mipmap.bt_fankui)
+                        .setTitle(R.string.point_out_title)
+                        .setMessage(ConnectActivity.this.getString(R.string.point_out_information_2))
+                        .setCancelable(false)
+                        .setNegativeButton(R.string.close_the_tip, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ConnectActivity.this.finish();
+                            }
+                        })
+                        .create().show();
+
+                break;
+            case ACTION_STATUS_DISCONNECT:
+
+                if(dialog.isShowing()){
+                    dialog.setMessage(ConnectActivity.this.getString(R.string.disConnect));
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                        }
+                    },1000);
+                }
+                break;
+            case ACTION_STATUS_CONNECTED_OK:
+
+                if(dialog.isShowing()){
+                    dialog.setMessage(ConnectActivity.this.getString(R.string.conSuccess));
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(dialog.isShowing()){
+                                dialog.dismiss();
+                                ConnectActivity.this.finish();
+                            }
+                        }
+                    },1500);
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+            Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+            bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 }

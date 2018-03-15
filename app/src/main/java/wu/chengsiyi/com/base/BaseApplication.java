@@ -2,6 +2,7 @@ package wu.chengsiyi.com.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.BluetoothContext;
@@ -11,6 +12,10 @@ import com.zhouyou.http.utils.HttpLog;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
+import wu.chengsiyi.com.database.DaoMaster;
+import wu.chengsiyi.com.database.DaoSession;
+import wu.chengsiyi.com.database.DeviceInfoDao;
+
 /**
  * APPLICATION
  */
@@ -18,19 +23,37 @@ public class BaseApplication extends Application {
 
     private static Application app = null;
 
+    private static DeviceInfoDao mDeviceInfoDao;
+
     @Override
     public void onCreate() {
         super.onCreate();
         app = this;
         EasyHttp.init(this);
 
-        //这里涉及到安全我把url去掉了，demo都是调试通的
         String Url = "https://www.yihisxminiid.com/";
         EasyHttp.getInstance().debug("EasyHttp", true);
         BluetoothContext.set(this);
 
          mClient = new BluetoothClient(this);
 
+        /**初始化数据库*/
+        setupDatabase();
+
+    }
+
+    private void setupDatabase() {
+        //创建数据库 device.db
+        DaoMaster.DevOpenHelper mHelper = new DaoMaster.
+                DevOpenHelper(getAppContext(), "device.db", null);
+        //获取可写数据库
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        //获取数据库对象
+        DaoMaster master = new DaoMaster(db);
+        //获取Dao对象管理者
+        DaoSession  daoSession = master.newSession();
+
+        mDeviceInfoDao = daoSession.getDeviceInfoDao();
     }
 
 
@@ -72,4 +95,9 @@ public class BaseApplication extends Application {
         }
         return mClient;
     }
+
+    public static DeviceInfoDao getDao(){
+        return mDeviceInfoDao;
+    }
+
 }

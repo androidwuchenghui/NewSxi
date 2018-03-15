@@ -67,6 +67,7 @@ public class MainActivity extends FragmentActivity {
         initListener();
 
         bindBleService();//绑定服务
+
     }
 
     private void bindBleService() {

@@ -60,15 +60,15 @@ public class Constants {
     public static final String ACTION_CONNECT_STATUS_CHANGED = "action.connect_status_changed";
     public static final String ACTION_CHARACTER_CHANGED = "action.character_changed";
     public static final String ACTION_STATUS_DISCONNECT = "action.status_disconnect";
-//    public static final String ACTION_CHARACTER_CHANGED = "action.character_changed";
-//    public static final String ACTION_CHARACTER_CHANGED = "action.character_changed";
+    public static final String ACTION_STATUS_CONNECTED = "action.status_connected";
+    public static final String ACTION_STATUS_DISCONNECT_TIP = "action.status_disconnect_tip";
+    public static final String ACTION_STATUS_CONNECTED_OK = "action.status_connected_ok";
 //    public static final String ACTION_CHARACTER_CHANGED = "action.character_changed";
 //    public static final String ACTION_CHARACTER_CHANGED = "action.character_changed";
 
     public static final int SEARCH_TYPE_CLASSIC = 1;
     public static final int SEARCH_TYPE_BLE = 2;
-    //  UUID
-    public static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    //  character UUID
     public static final UUID C_UUID_Character_SendDataToDevice = UUID.fromString("0000ffe9-0000-1000-8000-00805f9b34fb");
     public static final UUID C_UUID_Character_ReadDataFromDevice = UUID.fromString("0000ffe4-0000-1000-8000-00805f9b34fb");
     public static final UUID C_UUID_Character_Device_Name=UUID.fromString("0000ff91-0000-1000-8000-00805f9b34fb");
@@ -78,7 +78,13 @@ public class Constants {
     public static final UUID C_UUID_Character_Password_Notify=UUID.fromString("0000ffc2-0000-1000-8000-00805f9b34fb");
     public static final UUID C_UUID_Character_Module_Information=UUID.fromString("00002a23-0000-1000-8000-00805f9b34fb");
     public static final UUID C_UUID_Character_Module_Soft_Version=UUID.fromString("00002a26-0000-1000-8000-00805f9b34fb");
+    //   Service UUID
     public static final UUID C_UUID_Service_SendDataToDevice=UUID.fromString("0000ffe5-0000-1000-8000-00805f9b34fb");
+    public static final UUID C_UUID_Service_Device_Information=UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
+    public static final UUID C_UUID_Service_Password=UUID.fromString("0000ffc0-0000-1000-8000-00805f9b34fb");
+    public static final UUID C_UUID_Service_ReadDataFromDevice=UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
+    public static final UUID C_UUID_Service_DeviceConfig= UUID.fromString("0000ff90-0000-1000-8000-00805f9b34fb");
+
 
     public static final int CODE_CONNECT = 1;
     public static final int CODE_DISCONNECT = 2;

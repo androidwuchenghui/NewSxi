@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 26
@@ -10,6 +10,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    // greenDao 数据库
+    greendao {
+        //版本号，升级时可配置
+        schemaVersion 1
     }
     buildTypes {
         release {
@@ -50,5 +55,7 @@ dependencies {
     compile 'com.inuker.bluetooth:library:1.4.0'
     //权限请求
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+    //数据库框架 greenDao
+    compile 'org.greenrobot:greendao:3.2.0'
 
 }
