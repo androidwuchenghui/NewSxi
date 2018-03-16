@@ -38,6 +38,11 @@
                   android:theme="@style/MyAppTheme"
             ></activity>
 
+        <activity android:name=".SetActivity" android:theme="@style/MyAppTheme">
+
+        </activity>
+        <activity android:name=".DeviceInfoActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+
         <service android:name="wu.chengsiyi.com.service.BluetoothLeService"  android:enabled="true"/>
         <service
             android:name="com.inuker.bluetooth.library.BluetoothService" />

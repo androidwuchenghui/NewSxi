@@ -83,7 +83,6 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
 
     }
 
-
     public final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -105,7 +104,7 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
         mHandler = new Handler();
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);//设置进度条的样式
-        dialog.setMessage(ConnectActivity.this.getString(R.string.searching));
+
         dialog.setCanceledOnTouchOutside(false);
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         xlv.setAdapter(mLeDeviceListAdapter);
@@ -118,7 +117,7 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
         xlv.setPullLoadEnable(true);
         xlv.setAutoLoadEnable(true);
         xlv.setXListViewListener(this);
-
+        scanLeDevice(true);
     }
     private String getTime() {
         return new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA).format(new Date());
@@ -126,7 +125,7 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
     @Override
     protected void onResume() {
         super.onResume();
-        scanLeDevice(true);
+
     }
     //下拉刷新
     @Override
@@ -241,6 +240,7 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
                 @Override
                 public void onSearchStarted() {
                     mLeDeviceListAdapter.clear();
+                    dialog.setMessage(ConnectActivity.this.getString(R.string.searching));
                     dialog.show();
                     Log.d("rxPermissions", "onSearchStarted: ");
                 }
@@ -332,6 +332,7 @@ public class ConnectActivity extends AppCompatActivity implements XupListView.IX
                         @Override
                         public void run() {
                             if(dialog.isShowing()){
+
                                 dialog.dismiss();
                             }
                         }

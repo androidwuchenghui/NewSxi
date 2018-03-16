@@ -22,16 +22,23 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <!--  第一种方式设置沉浸式  -->
     <style name="myStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="BaseAppTheme" parent="myStyle">
+    <style name="BaseAppTheme" parent="@style/myStyle">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/tab_selected_color</item>
         <item name="colorPrimaryDark">@color/tab_selected_color</item>
         <item name="colorAccent">@color/tab_selected_color</item>
     </style>
-    <style name="MyAppTheme" parent="BaseAppTheme"/>
+    <style name="MyAppTheme" parent="@style/BaseAppTheme"/>
+
+    <!--  2   设置沉浸式  -->
+    <style name="TranslucentTheme" parent="AppTheme">
+    </style>
+
+
 </resources>

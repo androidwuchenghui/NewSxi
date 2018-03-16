@@ -57,5 +57,4 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
     //数据库框架 greenDao
     compile 'org.greenrobot:greendao:3.2.0'
-
 }

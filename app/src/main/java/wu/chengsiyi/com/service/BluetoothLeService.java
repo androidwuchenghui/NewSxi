@@ -128,6 +128,7 @@ public class BluetoothLeService extends Service {
     private int priPass = 0;
     private byte[] mPrivatePassword;
 
+
     public void setDevice(BluetoothDevice device) {
         this.device = device;
         mClient.registerConnectStatusListener(device.getAddress(), mBleConnectStatusListener);
@@ -136,7 +137,7 @@ public class BluetoothLeService extends Service {
             public void onResponse(int code, BleGattProfile profile) {
                 Log.d(TAG, "onResponse: " + code + "   profile:  " + profile);
                 if (code == REQUEST_SUCCESS) {
-                    Log.d(TAG, "onResponse:  成功 --> 遍历service ");
+                    Log.d(TAG, "onResponse:  成功 --> 遍历service  " + profile);
                     mProfile = profile;
                     pool.execute(serviceThread);
                 }
@@ -158,6 +159,7 @@ public class BluetoothLeService extends Service {
 //                                Log.d(TAG, "onResponse: " + g_Character_TX);
                 }
                 if (C_UUID_Character_ReadDataFromDevice.equals(character.getUuid())) {
+
                     g_Character_RX = character;
 //                                Log.d(TAG, "onResponse: " + g_Character_RX);
                 }
@@ -192,32 +194,78 @@ public class BluetoothLeService extends Service {
                 }
             }
         }
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         if (size > 6) {
             newVersion = false;
         }
+        Log.d(TAG, "onResponse:  size " + size + "  ");
         // 打开 读信息 通知
         if (g_Character_RX != null) {
+            Log.d(TAG, "onResponse: "+"  打开读信息的通道----");
             mClient.notify(device.getAddress(), C_UUID_Service_ReadDataFromDevice, g_Character_RX.getUuid(), readDataBleNotifyResponse);
         }
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (g_Character_Password_Notify != null) {
+            Log.d(TAG, "onResponse: "+"  打开密码通道----");
+            mClient.notify(device.getAddress(), C_UUID_Service_Password, g_Character_Password_Notify.getUuid(), passwordBleNotifyResponse);
+        }
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 提交密码
+        List<DeviceInfo> deviceInfos = MyDeviceDao.queryDevice(device.getAddress());
+
+        if (deviceInfos.size() < 1) {
+            //  数据库中不存在
+            Log.d(TAG, "onResponse: " + "  数据库中不存在  ");
+
+            // 初次提交默认密码
+            String defaultPassword = DEFAULT_PASSWORD + DEFAULT_PASSWORD;
+            byte[] passwordBytes = defaultPassword.getBytes();
+            commit_amount = 0;
+            Log.d(TAG, "onResponse: " + "  提交 000000 密码 ！ ");
+            mClient.write(device.getAddress(), C_UUID_Service_Password, C_UUID_Character_Password_C1, passwordBytes, new BleWriteResponse() {
+                @Override
+                public void onResponse(int code) {
+                    if (code == REQUEST_SUCCESS) {
+
+                    }
+                }
+            });
+        } else {
+            //  数据库中查询到有连接记录
+            commit_amount = 0;
+            Log.d(TAG, "onResponse: " + "  连接过 -> 存在  ");
+            DeviceInfo deviceInfo = deviceInfos.get(0);
+            String password = deviceInfo.getPassword();
+            String pw = password + password;
+            byte[] pwb = pw.getBytes();
+            mClient.write(device.getAddress(), C_UUID_Service_Password, C_UUID_Character_Password_C1, pwb, new BleWriteResponse() {
+                @Override
+                public void onResponse(int code) {
+                    if (code == REQUEST_SUCCESS) {
+                        Log.d(TAG, "onResponse: " + "  提交了保存的密码 ！ ");
+                    }
+                }
+            });
+        }
     }
 
     //  接收 读取数据的 Notify
     BleNotifyResponse readDataBleNotifyResponse = new BleNotifyResponse() {
-
         @Override
         public void onResponse(int code) {
             if (code == REQUEST_SUCCESS) {
-                Log.d(TAG, "onResponse: " + "打开   信息 通知成功 ~~~ ");
-                // 打开 密码 通知
-                if (g_Character_Password_Notify != null) {
-                    mClient.notify(device.getAddress(), C_UUID_Service_Password, g_Character_Password_Notify.getUuid(), passwordBleNotifyResponse);
-                }
+                Log.d(TAG, "onResponse: " + " 打开   信息 通知成功 ~~~  ");
+
             }
         }
 
@@ -229,52 +277,12 @@ public class BluetoothLeService extends Service {
     };
     // 接收 设密码的 Notify
     BleNotifyResponse passwordBleNotifyResponse = new BleNotifyResponse() {
-
         @Override
         public void onResponse(int code) {
             if (code == REQUEST_SUCCESS) {
                 Log.d(TAG, "onResponse: " + "打开   密码 通知成功 *** " + " 准备查询数据库，提交密码 > ");
-
-                List<DeviceInfo> deviceInfos = MyDeviceDao.queryDevice(device.getAddress());
-
-                if (deviceInfos.size() < 1) {
-                    //  数据库中不存在
-                    Log.d(TAG, "onResponse: " + "  数据库中不存在  ");
-
-                    // 初次提交默认密码
-                    String defaultPassword = DEFAULT_PASSWORD + DEFAULT_PASSWORD;
-                    byte[] passwordBytes = defaultPassword.getBytes();
-                    commit_amount = 0;
-                    Log.d(TAG, "onResponse: " + "  提交00密码 ！ ");
-                    mClient.write(device.getAddress(), C_UUID_Service_Password, C_UUID_Character_Password_C1, passwordBytes, new BleWriteResponse() {
-                        @Override
-                        public void onResponse(int code) {
-                            if (code == REQUEST_SUCCESS) {
-
-                            }
-                        }
-                    });
-                } else {
-                    //  数据库中查询到有连接记录
-                    commit_amount = 0;
-                    Log.d(TAG, "onResponse: " + "  连接过 -> 存在  ");
-                    DeviceInfo deviceInfo = deviceInfos.get(0);
-                    String password = deviceInfo.getPassword();
-                    String pw = password + password;
-                    byte[] pwb = pw.getBytes();
-                    mClient.write(device.getAddress(), C_UUID_Service_Password, C_UUID_Character_Password_C1, pwb, new BleWriteResponse() {
-                        @Override
-                        public void onResponse(int code) {
-                            if (code == REQUEST_SUCCESS) {
-                                Log.d(TAG, "onResponse: " + "  提交了保存的密码 ！ ");
-                            }
-                        }
-                    });
-                }
-
             }
         }
-
         /**
          * 提交密码后的回调 ( 00:密码正确 )
          * @param service
@@ -413,7 +421,6 @@ public class BluetoothLeService extends Service {
                         if (isConnected) {
                             mClient.disconnect(device.getAddress());
                         }
-
 
                     } else {
 

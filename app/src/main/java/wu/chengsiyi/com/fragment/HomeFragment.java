@@ -1,6 +1,5 @@
 package wu.chengsiyi.com.fragment;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.zhouyou.http.EasyHttp;
@@ -29,7 +27,9 @@ import butterknife.Unbinder;
 import wu.chengsiyi.com.base.BaseFragment;
 import wu.chengsiyi.com.callbacks.SimpleCallBack;
 import wu.chengsiyi.com.newsxi.ConnectActivity;
+import wu.chengsiyi.com.newsxi.DeviceInfoActivity;
 import wu.chengsiyi.com.newsxi.R;
+import wu.chengsiyi.com.newsxi.SetActivity;
 import wu.chengsiyi.com.utils.GlideImageLoader;
 
 /**
@@ -129,8 +129,20 @@ public class HomeFragment extends BaseFragment {
 
    @OnClick(R.id.mendian)
     public void clickmendian(){
-       RxPermissions rxPermissions = new RxPermissions(getActivity());
-       boolean granted2 = rxPermissions.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-       Log.d("rxPermissions", "      : 写：  "+granted2);
+
    }
+
+   @OnClick(R.id.shezhi)
+   public void clickshezhi(){
+       Context applicationContext = getActivity().getApplication().getApplicationContext();
+       startActivity(new Intent(applicationContext, SetActivity.class));
+   }
+
+   @OnClick(R.id.device_info)
+   public void clickdeviceInfo(){
+       Context applicationContext = getActivity().getApplication().getApplicationContext();
+       startActivity(new Intent(applicationContext, DeviceInfoActivity.class));
+   }
+
+
 }
